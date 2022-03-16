@@ -1,5 +1,5 @@
 import React,{useEffect} from 'react'
-import $ from 'jquery'
+import Script from 'next/script';
 export default function Append() {
     // useEffect(()=>{
     // $('#append').append('<p>lorem</p>')
@@ -13,24 +13,26 @@ export default function Append() {
     //     class:'bg-red-500'
     // }).prependTo('#append')
     // },[])
-    useEffect(()=>{
-        $('#hide').click(()=>{
-            $('#append').hide()
-        })
-        // $('#remove').click(()=>{
-        //     $('div').remove('#append2')
-        // })
-        $('#remove').click(()=>{
-            $("p:contains('to')").remove()
-        })
-        $('#empty').click(()=>{
-            $('#append2').empty('')
-        })
-    },[])
+    // useEffect(()=>{
+    //     $('#hide').click(()=>{
+    //         $('#append').hide()
+    //     })
+    //     // $('#remove').click(()=>{
+    //     //     $('div').remove('#append2')
+    //     // })
+    //     $('#remove').click(()=>{
+    //         $("p:contains('to')").remove()
+    //     })
+    //     $('#empty').click(()=>{
+    //         $('#append2').empty('')
+    //     })
+    // },[])
   return (
       <>
+      <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy='beforeInteractive'/>
+        <Script src="/js/test.js" strategy='afterInteractive'/>
     {/* <div id='append'>append</div> */}
-    <div id='append2'>
+    {/* <div id='append2'>
         <p>hello to</p>
         <p>hello too</p>
         <p>hello t</p>
@@ -39,7 +41,7 @@ export default function Append() {
     <br></br>
     <button id="remove">remove</button>
     <br></br>
-    <button id="empty">empty</button>
+    <button id="empty">empty</button> */}
     </>
   )
 }
