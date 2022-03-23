@@ -125,28 +125,113 @@
 //   );
 // };
 
+// import React from "react";
+// import { useForm, Controller } from "react-hook-form";
+// import { TextField, Checkbox } from "@material-ui/core";
+
+// function App() {
+//   const { handleSubmit, control, reset } = useForm({
+//     defaultValues: {
+//       checkbox: false,
+//     }
+//   });
+//   const onSubmit = data => console.log(data);
+
+//   return (
+//     <form onSubmit={handleSubmit(onSubmit)}>
+//       <Controller
+//         name="checkbox"
+//         control={control}
+//         rules={{ required: true }}
+//         render={({ field }) => <Checkbox {...field} />}
+//       />
+//       <input type="submit" />
+//     </form>
+//   );
+// }
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
-import { TextField, Checkbox } from "@material-ui/core";
+import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
+import ReactDOM from "react-dom";
+
+
+let renderCount = 0;
+
+const Input = ({ name, control, register, index }) => {
+  const value = useWatch({
+    control,
+    name
+  });
+  return <input {...register(`test.${index}.age`)} defaultValue={value} />;
+};
 
 function App() {
-  const { handleSubmit, control, reset } = useForm({
+  const [show, setShow] = React.useState(true);
+  const { register, control, getValues, handleSubmit } = useForm({
     defaultValues: {
-      checkbox: false,
+      test: [{ firstName: "Bill", lastName: "Luo", age: "2" }]
     }
   });
-  const onSubmit = data => console.log(data);
+  const { fields, remove } = useFieldArray({
+    control,
+    name: "test"
+  });
+
+  const onSubmit = (data) => console.log("data", data);
+
+  renderCount++;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller
-        name="checkbox"
-        control={control}
-        rules={{ required: true }}
-        render={({ field }) => <Checkbox {...field} />}
-      />
+      <h1>Field Array </h1>
+      <p>The following demo allow you to delete, append, prepend items</p>
+      <span className="counter">Render Count: {renderCount}</span>
+      {show && (
+        <ul>
+          {fields.map((item, index) => {
+            return (
+              <li key={item.id}>
+                <input
+                  defaultValue={getValues(`test.${index}.firstName`)}
+                  {...register(`test.${index}.firstName`)}
+                />
+
+                <Controller
+                  render={({ field }) => <input {...field} />}
+                  control={control}
+                  name={`test.${index}.lastName`}
+                  defaultValue={getValues(`test.${index}.lastName`)}
+                />
+
+                <Input
+                  register={register}
+                  control={control}
+                  index={index}
+                  name={`test.${index}.age`}
+                />
+
+                <button type="button" onClick={() => remove(index)}>
+                  Delete
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+      <section>
+        <button
+          type="button"
+          onClick={() => {
+            setShow(!show);
+          }}
+        >
+          Hide
+        </button>
+      </section>
+
       <input type="submit" />
     </form>
   );
 }
+
+
 export default App
